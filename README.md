@@ -1,6 +1,6 @@
 # TwitterURL
 
-Gather all URL mentioned in you twitter timeline for later check !. 
+Save all URL mentioned in you twitter timeline for later check !. 
 
 I was checking twitter timeline with very simple terminal application but
 from time to time I lost a URL which might be very interesting.
