@@ -2,10 +2,6 @@
 
 use strict;
 use warnings;
-use lib qw(
-    /app/twitter_url
-    /home/haram/git/net-twitter-lite/lib
-);
 use Config::Pit;
 use HTML::Entities qw(decode_entities);
 use HTTP::Date;
