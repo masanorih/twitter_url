@@ -1,0 +1,19 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</script>
+</head>
+<body>
+
+: for $url_list -> $elem {
+<dl>
+<dt> id: <: $elem.id :>   </dt>
+<dd> created_on: <: $elem.created_on :> </dd>
+<dd> url: <: $elem.url :> </dd>
+<dd> screen_name: <: $elem.screen_name :> </dd>
+<dd> tweet: <: $elem.tweet :> </dd>
+</dl>
+: }
+
+</body>
+</html>

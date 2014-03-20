@@ -1,0 +1,36 @@
+<!doctype html>
+<html ng-app="twitter_url">
+<head>
+<title>twitter_url</title>
+<meta charset="utf-8">
+<link rel="stylesheet" href="twitter_url.css"/>
+<script src="http://code.angularjs.org/1.2.9/angular.min.js"></script>
+<script src="twitter_url.js"></script>
+</head>
+<body>
+<div id="twitter_url" ng-controller="Ctrl">
+<dl>
+<div class="url_list" ng-repeat="elem in url_list">
+<dt>
+<a class="link" target="_blank" ng-click="go(elem)">{{elem.url}}</a>
+<dd class="description">
+<div ng-show="elem.show_deleting">
+{{elem.show_deleting}}
+</div><!-- show_deleting -->
+<div ng-show="! elem.show_deleting">
+id: {{elem.id}} created_on: {{elem.created_on}} <br />
+@{{elem.screen_name}}: {{elem.tweet}} <br />
+</div>
+</dd>
+<span class="pass"><button ng-click="pass(elem)">pass id:{{elem.id}}</button>
+</span>
+<br />
+</div><!-- ng-repeat -->
+</dl>
+<button ng-click="load_url_list()">reload list</button>
+<span class="url_count">
+total: {{url_count}} urls left.
+</span>
+</div><!-- ng-controller="Ctrl" -->
+</body>
+</html>
