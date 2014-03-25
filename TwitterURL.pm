@@ -6,6 +6,9 @@ use DBI;
 
 my $dbname = 'twitter_url';
 
+use constant STATUS_LIST  => 1;
+use constant STATUS_SAVED => 2;
+
 sub new {
     my( $class, %args ) = @_;
     my $self = {};
@@ -66,11 +69,24 @@ sub insert_url {
 sub add_args {
     my( $self, $sql, %args ) = @_;
     my $db = $self->{db};
+    if ( $args{where} ) {
+        my $hash = delete $args{where};
+        my @list;
+        for my $key ( keys %{$hash} ) {
+            my $val = $hash->{$key};
+            push @list, sprintf( "%s = %s", $key, $val );
+        }
+        if (@list) {
+            my $where_clause = join ' and ', @list;
+            $sql .= ' where ' . $where_clause;
+        }
+    }
     for my $key ( keys %args ) {
         my $val = $args{$key};
         $key =~ s/\_/ /g;
         $sql .= sprintf " %s %s", $key, $val;
     }
+    #warn "add_args sql = $sql";
     return $sql;
 }
 
@@ -81,7 +97,7 @@ sub select_twitter_url {
     my $sql = $self->add_args( 'select * from twitter_url', %args );
     my $sth = $db->prepare($sql) or die $db->errstr;
 
-    my $result = $sth->execute;
+    my $result = $sth->execute();
     if ($result) {
         my $ref = $self->fetchall_arrayref_hash($sth);
         $sth->finish;
@@ -91,10 +107,11 @@ sub select_twitter_url {
 }
 
 sub select_count {
-    my $self = shift;
-    my $sth = $self->{db}->prepare( "
-        select count(*) as count from twitter_url
-    " );
+    my ( $self, %args ) = @_;
+    my $db  = $self->{db};
+    my $sql = $self->add_args( 'select count(*) as count from twitter_url',
+        %args );
+    my $sth = $db->prepare($sql) or die $db->errstr;
     my $result = $sth->execute;
     if ($result) {
         my $ref = $self->fetchall_arrayref_hash($sth);
@@ -125,6 +142,31 @@ sub delete_id {
     }
     else {
         die "delete failed: $! : " . $db->errstr;
+    }
+}
+
+sub save_id {
+    my( $self, $id ) = @_;
+
+    my $db  = $self->{db};
+    my $sth = $db->prepare( "
+        update twitter_url set status = ?, updated_on = current_timestamp
+        where id = ?
+    " );
+    my $result = $sth->execute( STATUS_SAVED, $id );
+    if ($result) {
+        if ( 1 == $sth->rows ) {
+            $sth->finish;
+            $db->commit;
+            return 1;
+        }
+        else {
+            $db->rollback;
+            die "update record is not 1. but " . $sth->rows;
+        }
+    }
+    else {
+        die "update failed: $! : " . $db->errstr;
     }
 }
 
