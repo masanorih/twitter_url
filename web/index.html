@@ -9,25 +9,46 @@
 </head>
 <body>
 <div id="twitter_url" ng-controller="Ctrl">
+&nbsp; &nbsp; &nbsp; &nbsp;
+<button ng-click="load_url_list()">reload</button>
+&nbsp; &nbsp; &nbsp; &nbsp;
+<button ng-click="pass_all()">pass all</button>
+<span class="url_count">
+total: {{url_count}} urls left.
+</span>
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp;
+<span class="saved">
+<input type="checkbox" id="show_saved" ng-model="show_saved"
+  ng-true-value="saved" ng-false-value="list" ng-change="change_status()">
+<label for="show_saved">show saved</label>
+</span>
 <dl>
 <div class="url_list" ng-repeat="elem in url_list">
 <dt>
 <a class="link" target="_blank" ng-click="go(elem)">{{elem.url}}</a>
+<span class="pass">
+&nbsp; &nbsp;
+<button ng-show="show_saved == 'list' " ng-click="save(elem)">save</button>
+<button ng-show="show_saved == 'saved'" ng-click="pass(elem)">pass</button>
+</span>
+</dt>
 <dd class="description">
-<div ng-show="elem.show_deleting">
-{{elem.show_deleting}}
-</div><!-- show_deleting -->
-<div ng-show="! elem.show_deleting">
+<div ng-show="elem.show_inprogress">
+{{elem.show_inprogress}}
+</div><!-- show_inprogress -->
+<div ng-show="! elem.show_inprogress">
 id: {{elem.id}} created_on: {{elem.created_on}} <br />
 @{{elem.screen_name}}: {{elem.tweet}} <br />
 </div>
 </dd>
-<span class="pass"><button ng-click="pass(elem)">pass id:{{elem.id}}</button>
-</span>
 <br />
 </div><!-- ng-repeat -->
 </dl>
-<button ng-click="load_url_list()">reload list</button>
+&nbsp; &nbsp; &nbsp; &nbsp;
+<button ng-click="load_url_list()">reload</button>
+&nbsp; &nbsp; &nbsp; &nbsp;
+<button ng-click="pass_all()">pass all</button>
 <span class="url_count">
 total: {{url_count}} urls left.
 </span>

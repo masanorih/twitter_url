@@ -1,18 +1,15 @@
 body {
     width: 600px;
     font-family: Bitter, Georgia, serif;
-/*
-    font-family: Concourse_t3_regular;
- */
 }
 
 dt {
-    padding: 4px;
+    padding: 6px;
 }
 
 dd.description {
     font-size: 12px;
-    padding: 3px;
+    padding: 6px;
     border: 1px dotted gray;
     background-color: #f0f0f0;
     color: #101010;
@@ -25,10 +22,14 @@ dd.description {
 }
 
 .pass {
-    clear:both;
-    float:right;
+    clear: both;
+    float: right;
 }
 
 .url_count {
+    font-size: 13px;
+}
+
+.saved {
     font-size: 13px;
 }
