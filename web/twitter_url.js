@@ -54,6 +54,13 @@
           delete elem.show_inprogress;
       });
     }
+    // insert new entry
+    $scope.insert_new_url = function() {
+      var url = $scope.new_url;
+      $http.post('/turl/insert', {url: url}).success(function(data) {
+        $scope.new_url = '';
+      });
+    }
 
     function get_idx(id) {
       for(var idx in $scope.url_list) {

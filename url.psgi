@@ -18,19 +18,22 @@ my $app = sub {
     my $path = $req->path_info;
 
     if ( not $path or $path eq '/' ) {
-        return return_root($req);
+        return_root($req);
     }
     elsif ( $path eq '/list' ) {
-        return return_list($req);
+        return_list($req);
     }
     elsif ( $path eq '/count' ) {
-        return return_count($req);
+        return_count($req);
     }
     elsif ( $path eq '/delete' ) {
-        return return_delete($req);
+        return_delete($req);
     }
     elsif ( $path eq '/save' ) {
-        return return_save($req);
+        return_save($req);
+    }
+    elsif ( $path eq '/insert' ) {
+        return_insert($req);
     }
     else {
         [ 404, [ "Content-Type" => "text/plain" ], ["404 Not Found"] ];
@@ -90,6 +93,20 @@ sub return_save {
     $res->finalize;
 }
 
+sub return_insert {
+    my $req = shift;
+    my $url = $req->param('url');
+    my $res = $req->new_response(200);
+    $res->content_type('application/json; charset=UTF-8');
+    $res->body( render_insert($url) );
+    $res->finalize;
+}
+
+sub render_json {
+    my $ref = shift;
+    to_json( $ref, { utf8 => 1, pretty => 1 } );
+}
+
 sub render_root {
     my $vars = $turl->select_twitter_url(
         order_by => 'id',
@@ -107,47 +124,40 @@ sub render_list {
             status => $args{status},
         },
     );
-    return to_json( $vars, { utf8 => 1, pretty => 1 } );
+    render_json($vars);
 }
 
 sub render_count {
     my %args = @_;
     my $vars = $turl->select_count(
-        where    => {
+        where => {
             status => $args{status},
         },
     );
-    return to_json( $vars, { utf8 => 1, pretty => 1 } );
+    render_json($vars);
 }
 
 sub render_delete {
     my $id     = shift;
     my $result = $turl->delete_id($id);
-    if ($result) {
-        my $ok = { result => 'ok' };
-        return to_json( $ok, { utf8 => 1, pretty => 1 } );
-    }
-    else {
-        my $ng = {
-            result  => 'ng',
-            message => $turl->errstr,
-        };
-        return to_json( $ng, { utf8 => 1, pretty => 1 } );
-    }
+    $result
+        ? render_json( { result => 'ok' } )
+        : render_json( { result => 'ng', message => $turl->errstr } );
 }
 
 sub render_save {
     my $id     = shift;
     my $result = $turl->save_id($id);
-    if ($result) {
-        my $ok = { result => 'ok' };
-        return to_json( $ok, { utf8 => 1, pretty => 1 } );
-    }
-    else {
-        my $ng = {
-            result  => 'ng',
-            message => $turl->errstr,
-        };
-        return to_json( $ng, { utf8 => 1, pretty => 1 } );
-    }
+    $result
+        ? render_json( { result => 'ok' } )
+        : render_json( { result => 'ng', message => $turl->errstr } );
+}
+
+sub render_insert {
+    my $url    = shift;
+    my $result = $turl->insert_url( text => '', name => 'web',
+        url => $url, status => 2 );
+    $result
+        ? render_json( { result => 'ok' } )
+        : render_json( { result => 'ng', message => $turl->errstr } );
 }

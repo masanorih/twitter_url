@@ -16,7 +16,6 @@
 <span class="url_count">
 total: {{url_count}} urls left.
 </span>
-<br>
 &nbsp; &nbsp; &nbsp; &nbsp;
 <span class="saved">
 <input type="checkbox" id="show_saved" ng-model="show_saved"
@@ -52,6 +51,11 @@ id: {{elem.id}} created_on: {{elem.created_on}} <br />
 <span class="url_count">
 total: {{url_count}} urls left.
 </span>
+<br> &nbsp; <br> &nbsp;
+<div class="new_url">
+new URL: <input type="text" ng-model="new_url" size="50" maxlength="255">
+<button ng-click="insert_new_url()">submit</button>
+</div>
 </div><!-- ng-controller="Ctrl" -->
 </body>
 </html>

@@ -42,24 +42,25 @@ sub fetchall_arrayref_hash {
 }
 
 sub insert_url {
-    my( $self, $tweet, $screen_name, $url ) = @_;
+    my( $self, %args ) = @_;
 
     my $sth = $self->{db}->prepare( "
         insert into twitter_url
-        ( tweet, screen_name, url, created_on, updated_on )
-        values ( ?, ?, ?, now(), now() )
+        ( url, screen_name, tweet, status, created_on, updated_on )
+        values ( ?, ?, ?, ?, now(), now() )
     " );
-    my $result = $sth->execute( $tweet, $screen_name, $url );
+    my $result = $sth->execute( $args{url}, $args{name},
+        $args{tweet}, $args{status} );
     if ($result) {
         $sth->finish;
         $self->{db}->commit;
     }
     else {
         my $errstr = $self->{db}->errstr;
-        my $state = $self->{db}->state;
+        my $state  = $self->{db}->state;
         $self->{db}->rollback;
         # ignore unique_violation
-        if ( 23505 != $state ) {
+        if ( 23505 ne $state ) {
             die "failed to commit : " . $errstr;
         }
     }

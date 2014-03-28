@@ -103,7 +103,8 @@ sub expand_shorten_url {
         for my $ignore ( @{ $config->{ignore_url} } ) {
             return $text if $expanded =~ /^$ignore/;
         }
-        $turl->insert_url( $text, $name, $expanded );
+        $turl->insert_url( tweet => $text, name => $name,
+            url => $expanded, status => 1 );
     }
     return $text;
 }
