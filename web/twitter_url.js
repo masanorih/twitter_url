@@ -1,7 +1,18 @@
 (function (global) {
   "use strict";
   var twitter_url = angular.module('twitter_url', []);
-  twitter_url.controller('Ctrl', function($scope, $http, $window) {
+  twitter_url.controller('Ctrl', function($scope, $http, $window, $document) {
+    // keyboard shortcuts
+    $document.bind('keypress', function(ev) {
+        // 'R'
+        if ( 82 == ev.which ) {
+            $scope.load_url_list();
+        }
+        // 'P'
+        else if ( 80 == ev.which ) {
+            $scope.pass_all();
+        }
+    })
     // controller methods
     // load url_list json data
     $scope.load_url_list = function() {
