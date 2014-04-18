@@ -58,7 +58,7 @@ sub return_list {
     my $width  = $req->param('width');
     my $status = $req->param('status');
     $status = 'saved' eq $status ? 2 : 1;
-    my $limit = int( $width / 180 ) + 1;
+    my $limit = int( $width / 200 ) + 1;
     my $res   = $req->new_response(200);
     $res->content_type('application/json; charset=UTF-8');
     $res->body( render_list( limit => $limit, status => $status ) );

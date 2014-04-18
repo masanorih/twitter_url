@@ -10,6 +10,7 @@ dt {
 dd.description {
     font-size: 12px;
     padding: 6px;
+    margin-left: 10px;
     border: 1px dotted gray;
     background-color: #f0f0f0;
     color: #101010;

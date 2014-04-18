@@ -40,30 +40,36 @@
         //console.log("show_saved = " + $scope.show_saved);
     }
     $scope.go = function(elem) {
-      var id  = elem.id;
-      var url = elem.url;
-      $http.post('/turl/delete?id=' + id).success(function(data) {
-          delete_id(id);
-      });
-      window.open(url);
+        var id  = elem.id;
+        var url = elem.url;
+        $http.post('/turl/delete?id=' + id).success(function(data) {
+            delete_id(id);
+        });
+        window.open(url);
     }
     // simply delete entry
     $scope.pass = function(elem) {
-      var id  = elem.id;
-      elem.show_inprogress = "passing...";
-      $http.post('/turl/delete?id=' + id).success(function(data) {
-          delete_id(id);
-          delete elem.show_inprogress;
-      });
+        var id  = elem.id;
+        elem.show_inprogress = "passing...";
+        $http.post('/turl/delete?id=' + id).success(function(data) {
+            delete_id(id);
+            delete elem.show_inprogress;
+        }).error(function(data, status, headers, config) {
+            var string = "data<br>";
+            string = JSON.stringify(data);
+            string += "<br>status<br>";
+            string += JSON.stringify(status);
+            elem.show_inprogress = string;
+        });
     }
     // simply delete entry
     $scope.save = function(elem) {
-      var id  = elem.id;
-      elem.show_inprogress = "saving...";
-      $http.post('/turl/save?id=' + id).success(function(data) {
-          delete_id(id);
-          delete elem.show_inprogress;
-      });
+        var id  = elem.id;
+        elem.show_inprogress = "saving...";
+        $http.post('/turl/save?id=' + id).success(function(data) {
+            delete_id(id);
+            delete elem.show_inprogress;
+        });;
     }
     // insert new entry
     $scope.insert_new_url = function() {

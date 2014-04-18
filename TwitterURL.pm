@@ -136,6 +136,11 @@ sub delete_id {
             $db->commit;
             return 1;
         }
+        elsif ( 0 == $sth->rows ) {
+            # already deleted. ignore
+            $db->rollback;
+            return 1;
+        }
         else {
             $db->rollback;
             die "deleted record is not 1. but " . $sth->rows;
