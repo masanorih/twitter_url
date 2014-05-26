@@ -20,7 +20,7 @@ sub new {
         {
             AutoCommit       => 0,
             PrintError       => 0,
-            RaiseError       => 0,
+            RaiseError       => 1,
             FetchHashKeyName => 'NAME_lc'
         }
     ) or die "failed to connect database $dbname: $!";
@@ -30,6 +30,10 @@ sub new {
 
 sub errstr {
     shift->{db}->errstr;
+}
+
+sub state {
+    shift->{db}->state;
 }
 
 sub fetchall_arrayref_hash {
@@ -44,25 +48,48 @@ sub fetchall_arrayref_hash {
 sub insert_url {
     my( $self, %args ) = @_;
 
+    #warn "insert_url prepare";
     my $sth = $self->{db}->prepare( "
-        insert into twitter_url
-        ( url, screen_name, tweet, status, created_on, updated_on )
-        values ( ?, ?, ?, ?, now(), now() )
+        select id from twitter_url where url = ?
     " );
-    my $result = $sth->execute( $args{url}, $args{name},
-        $args{tweet}, $args{status} );
-    if ($result) {
-        $sth->finish;
-        $self->{db}->commit;
+    my $result = $sth->execute($args{url});
+    my $ref = $self->fetchall_arrayref_hash($sth);
+    #use Data::Dumper; warn Dumper $ref;
+    if ( 'ARRAY' eq ref $ref and exists $ref->[0]->{id} ) {
+        #warn "record already exists";
+        return 1;
     }
-    else {
+
+    eval {
+        alarm 5;
+        local $SIG{ALRM} = sub { die "timeout" };
+        $sth = $self->{db}->prepare( "
+            insert into twitter_url
+            ( url, screen_name, tweet, status, created_on, updated_on )
+            values ( ?, ?, ?, ?, now(), now() )
+        " );
+        #warn "insert_url execute";
+        $sth->execute( $args{url}, $args{name},
+            $args{tweet}, $args{status} );
+        #warn "insert_url execute end";
+    };
+    alarm 0;
+
+    if ($@) {
         my $errstr = $self->{db}->errstr;
         my $state  = $self->{db}->state;
+        #warn '$@=' . $@;
+        warn "errstr=$errstr";
+        warn "state=$state";
         $self->{db}->rollback;
         # ignore unique_violation
-        if ( 23505 ne $state ) {
-            die "failed to commit : " . $errstr;
-        }
+        #if ( 23505 ne $state ) {
+        #    die "failed to commit : " . $errstr;
+        #}
+    }
+    else {
+        $sth->finish;
+        $self->{db}->commit;
     }
     return 1;
 }

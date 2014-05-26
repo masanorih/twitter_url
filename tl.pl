@@ -95,6 +95,9 @@ sub expand_shorten_url {
         if ( $text =~ /($RE{URI}{HTTP})/ ) {
             $expanded = $1;
         }
+        if ( $expanded and $expanded =~ m!^http://t.$! ) {
+            return $expanded;
+        }
     }
     if ($expanded) {
         for my $ignore ( @{ $config->{ignore_name} } ) {
@@ -103,6 +106,8 @@ sub expand_shorten_url {
         for my $ignore ( @{ $config->{ignore_url} } ) {
             return $text if $expanded =~ /^$ignore/;
         }
+        #warn "insert_url $expanded";
+        return $text if $expanded eq 'http://t.co/';
         $turl->insert_url( tweet => $text, name => $name,
             url => $expanded, status => 1 );
     }
@@ -111,8 +116,10 @@ sub expand_shorten_url {
 
 sub do_expand {
     my($url) = @_;
+    #warn "do_expand $url";
     my $ua = LWP::UserAgent->new( timeout => 5 );
     my $res = $ua->head($url);
+    #warn "do_expand end";
     if ( $res->request->uri ) {
         $url = $res->request->uri;
     }

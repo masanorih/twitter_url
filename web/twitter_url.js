@@ -16,24 +16,34 @@
     // controller methods
     // load url_list json data
     $scope.load_url_list = function() {
-      var width = $window.innerWidth;
+      var height = $window.innerHeight;
       var status = $scope.show_saved;
+      $scope.height = height;
       var post_data = {
-        width: width,
+        height: height,
         status: status
       };
       $http.post('/turl/list', post_data).success(function(data) {
           $scope.url_list = data;
       });
       $http.post('/turl/count', post_data).success(function(data) {
-          $scope.url_count = data[0].count;
+          $scope.url_count = data.count;
       });
     }
     $scope.pass_all = function() {
+      var ids = new Array;
       for(var idx in $scope.url_list) {
         var elem = $scope.url_list[idx];
-        $scope.pass(elem);
+        var id   = elem.id;
+        elem.show_inprogress = "passing...";
+        ids.push(id);
       }
+      var post_data = {
+        ids: ids
+      };
+      $http.post('/turl/mdelete', post_data).success(function(data) {
+        $scope.load_url_list();
+      });
     }
     $scope.change_status = function() {
         $scope.load_url_list();
