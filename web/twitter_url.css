@@ -7,6 +7,16 @@ dt {
     padding: 6px;
 }
 
+div.url_list {
+    border-left: 1px solid white;
+    padding: 0px;
+}
+
+div.url_list_target {
+    border-left: 1px solid blue;
+    padding: 0px;
+}
+
 dd.description {
     font-size: 12px;
     padding: 6px;

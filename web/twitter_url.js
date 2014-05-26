@@ -4,14 +4,22 @@
   twitter_url.controller('Ctrl', function($scope, $http, $window, $document) {
     // keyboard shortcuts
     $document.bind('keypress', function(ev) {
-        // 'R'
-        if ( 82 == ev.which ) {
-            $scope.load_url_list();
-        }
-        // 'P'
-        else if ( 80 == ev.which ) {
-            $scope.pass_all();
-        }
+      //console.log(ev.which);
+      // 'R'
+      if ( 82 == ev.which ) {
+        $scope.load_url_list();
+      }
+      // 'P'
+      else if ( 80 == ev.which ) {
+        $scope.pass_all();
+      }
+      // 'J'
+      else if ( 74 == ev.which ) {
+        $scope.mv_target(1);
+      }
+      else if ( 75 == ev.which ) {
+        $scope.mv_target(-1);
+      }
     })
     // controller methods
     // load url_list json data
@@ -25,6 +33,7 @@
       };
       $http.post('/turl/list', post_data).success(function(data) {
           $scope.url_list = data;
+          $scope.hilight_target();
       });
       $http.post('/turl/count', post_data).success(function(data) {
           $scope.url_count = data.count;
@@ -88,6 +97,34 @@
         $scope.new_url = '';
       });
     }
+    // hilight target
+    $scope.hilight_target = function() {
+      for(var idx in $scope.url_list) {
+        var elem = $scope.url_list[idx];
+        if ( idx == $scope.target ) {
+          elem.target = true;
+          //console.log('idx ', idx, 'is true');
+        }
+        else {
+          elem.target = false;
+          //console.log('idx ', idx, 'is false');
+        }
+      }
+    }
+    // move target
+    $scope.mv_target = function(i) {
+      $scope.target += i;
+      var max = $scope.url_list.length - 1;
+      if ( $scope.target < 0 ) {
+        $scope.target = 0;
+      }
+      else if ( $scope.target > max ) {
+        $scope.target = max;
+      }
+      $scope.$apply(function() {
+        $scope.hilight_target();
+      });
+    }
 
     function get_idx(id) {
       for(var idx in $scope.url_list) {
@@ -111,6 +148,8 @@
       }
     }
 
+    // set default value
+    $scope.target = 0;
     $scope.show_saved = 'list';
     $scope.load_url_list();
   });

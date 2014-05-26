@@ -15,6 +15,7 @@
 <button ng-click="pass_all()">pass all</button>
 <span class="url_count">
 height:{{height}} &nbsp; total:{{url_count}} urls left.
+target:{{target}}
 </span>
 &nbsp; &nbsp; &nbsp; &nbsp;
 <span class="saved">
@@ -23,7 +24,8 @@ height:{{height}} &nbsp; total:{{url_count}} urls left.
 <label for="show_saved">show saved</label>
 </span>
 <dl>
-<div class="url_list" ng-repeat="elem in url_list">
+<div ng-repeat="elem in url_list"
+  ng-class="{'url_list_target': elem.target, 'url_list': !elem.target}" >
 <dt>
 <a class="link" target="_blank" ng-click="go(elem)">{{elem.url}}</a>
 <span class="pass">
