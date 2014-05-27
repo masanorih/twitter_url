@@ -5,20 +5,21 @@
     // keyboard shortcuts
     $document.bind('keypress', function(ev) {
       //console.log(ev.which);
-      // 'R'
-      if ( 82 == ev.which ) {
+      if ( 82 == ev.which ) {      // 'R'
         $scope.load_url_list();
       }
-      // 'P'
-      else if ( 80 == ev.which ) {
+      else if ( 80 == ev.which ) { // 'P'
         $scope.pass_all();
       }
-      // 'J'
-      else if ( 74 == ev.which ) {
+      else if ( 74 == ev.which ) { // 'J'
         $scope.mv_target(1);
       }
-      else if ( 75 == ev.which ) {
+      else if ( 75 == ev.which ) { // 'K'
         $scope.mv_target(-1);
+      }
+      else if ( 79 == ev.which ) { // 'O'
+        var elem = $scope.url_list[$scope.target];
+        $scope.go(elem);
       }
     })
     // controller methods
