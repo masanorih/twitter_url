@@ -5,26 +5,26 @@
     // keyboard shortcuts
     $document.bind('keypress', function(ev) {
       //console.log(ev.which);
-      if ( 82 == ev.which ) {      // 'R'
+      if (82 == ev.which) {      // 'R'
         $scope.load_url_list();
       }
-      else if ( 80 == ev.which ) { // 'P'
+      else if (80 == ev.which) { // 'P'
         $scope.pass_all();
       }
-      else if ( 74 == ev.which ) { // 'J'
+      else if (74 == ev.which) { // 'J'
         $scope.mv_target(1);
       }
-      else if ( 75 == ev.which ) { // 'K'
+      else if (75 == ev.which) { // 'K'
         $scope.mv_target(-1);
       }
-      else if ( 79 == ev.which ) { // 'O'
+      else if (79 == ev.which) { // 'O'
         var elem = $scope.url_list[$scope.target];
         $scope.go(elem);
       }
     })
     // controller methods
     // load url_list json data
-    $scope.load_url_list = function() {
+    $scope.load_url_list = function(next) {
       var height = $window.innerHeight;
       var status = $scope.show_saved;
       $scope.height = height;
@@ -32,6 +32,13 @@
         height: height,
         status: status
       };
+      if(next && $scope.url_list) {
+        var last_id;
+        for(var idx in $scope.url_list) {
+          last_id = $scope.url_list[idx].id;
+        }
+        post_data.nextid = last_id;
+      }
       $http.post('/turl/list', post_data).success(function(data) {
           $scope.url_list = data;
           $scope.hilight_target();

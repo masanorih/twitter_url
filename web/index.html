@@ -52,6 +52,9 @@ id: {{elem.id}} created_on: {{elem.created_on}} <br />
 <button ng-click="pass_all()">pass all</button>
 <span class="url_count">
 total:{{url_count}} urls left.
+&nbsp; &nbsp; &nbsp; &nbsp;
+<button ng-show="show_saved == 'saved'"
+  ng-click="load_url_list('next')">next</button>
 </span>
 <br> &nbsp; <br> &nbsp;
 <div class="new_url">
