@@ -4,22 +4,24 @@
   twitter_url.controller('Ctrl', function($scope, $http, $window, $document) {
     // keyboard shortcuts
     $document.bind('keypress', function(ev) {
-      //console.log(ev.which);
-      if (82 == ev.which) {      // 'R'
-        $scope.load_url_list();
-      }
-      else if (80 == ev.which) { // 'P'
-        $scope.pass_all();
-      }
-      else if (74 == ev.which) { // 'J'
-        $scope.mv_target(1);
-      }
-      else if (75 == ev.which) { // 'K'
-        $scope.mv_target(-1);
-      }
-      else if (79 == ev.which) { // 'O'
-        var elem = $scope.url_list[$scope.target];
-        $scope.go(elem);
+      if (false == $scope.focus_new_url) {
+        console.log(ev.which);
+        if (114 == ev.which) {      // 'R'
+          $scope.load_url_list();
+        }
+        else if (112 == ev.which) { // 'P'
+          $scope.pass_all();
+        }
+        else if (106 == ev.which) { // 'J'
+          $scope.mv_target(1);
+        }
+        else if (107 == ev.which) { // 'K'
+          $scope.mv_target(-1);
+        }
+        else if (111 == ev.which) { // 'O'
+          var elem = $scope.url_list[$scope.target];
+          $scope.go(elem);
+        }
       }
     })
     // controller methods
@@ -63,40 +65,40 @@
       });
     }
     $scope.change_status = function() {
-        $scope.load_url_list();
-        //console.log("show_saved = " + $scope.show_saved);
+      $scope.load_url_list();
+      //console.log("show_saved = " + $scope.show_saved);
     }
     $scope.go = function(elem) {
-        var id  = elem.id;
-        var url = elem.url;
-        $http.post('/turl/delete?id=' + id).success(function(data) {
-            delete_id(id);
-        });
-        window.open(url);
+      var id  = elem.id;
+      var url = elem.url;
+      $http.post('/turl/delete?id=' + id).success(function(data) {
+        delete_id(id);
+      });
+      window.open(url);
     }
     // simply delete entry
     $scope.pass = function(elem) {
-        var id  = elem.id;
-        elem.show_inprogress = "passing...";
-        $http.post('/turl/delete?id=' + id).success(function(data) {
-            delete_id(id);
-            delete elem.show_inprogress;
-        }).error(function(data, status, headers, config) {
-            var string = "data<br>";
-            string = JSON.stringify(data);
-            string += "<br>status<br>";
-            string += JSON.stringify(status);
-            elem.show_inprogress = string;
-        });
+      var id  = elem.id;
+      elem.show_inprogress = "passing...";
+      $http.post('/turl/delete?id=' + id).success(function(data) {
+        delete_id(id);
+        delete elem.show_inprogress;
+      }).error(function(data, status, headers, config) {
+        var string = "data<br>";
+        string = JSON.stringify(data);
+        string += "<br>status<br>";
+        string += JSON.stringify(status);
+        elem.show_inprogress = string;
+      });
     }
     // simply delete entry
     $scope.save = function(elem) {
-        var id  = elem.id;
-        elem.show_inprogress = "saving...";
-        $http.post('/turl/save?id=' + id).success(function(data) {
-            delete_id(id);
-            delete elem.show_inprogress;
-        });;
+      var id  = elem.id;
+      elem.show_inprogress = "saving...";
+      $http.post('/turl/save?id=' + id).success(function(data) {
+        delete_id(id);
+        delete elem.show_inprogress;
+      });;
     }
     // insert new entry
     $scope.insert_new_url = function() {
@@ -160,5 +162,6 @@
     $scope.target = 0;
     $scope.show_saved = 'list';
     $scope.load_url_list();
+    $scope.focus_new_url = false;
   });
 })(this);

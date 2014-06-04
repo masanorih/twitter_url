@@ -58,7 +58,8 @@ total:{{url_count}} urls left.
 </span>
 <br> &nbsp; <br> &nbsp;
 <div class="new_url">
-new URL: <input type="text" ng-model="new_url" size="50" maxlength="255">
+new URL: <input type="text" size="50" maxlength="255" ng-model="new_url"
+  ng-focus="focus_new_url=true" ng-blur="focus_new_url=false">
 <button ng-click="insert_new_url()">submit</button>
 </div>
 </div><!-- ng-controller="Ctrl" -->
