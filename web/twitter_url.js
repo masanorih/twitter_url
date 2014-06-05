@@ -5,21 +5,23 @@
     // keyboard shortcuts
     $document.bind('keypress', function(ev) {
       if (false == $scope.focus_new_url) {
-        console.log(ev.which);
-        if (114 == ev.which) {      // 'R'
+        //console.log(ev.which);
+        if (114 == ev.which) {      // 'r'
           $scope.load_url_list();
         }
-        else if (112 == ev.which) { // 'P'
+        else if (112 == ev.which) { // 'p'
+          $scope.target = 0;
           $scope.pass_all();
         }
-        else if (106 == ev.which) { // 'J'
+        else if (106 == ev.which) { // 'j'
           $scope.mv_target(1);
         }
-        else if (107 == ev.which) { // 'K'
+        else if (107 == ev.which) { // 'k'
           $scope.mv_target(-1);
         }
-        else if (111 == ev.which) { // 'O'
+        else if (111 == ev.which) { // 'o'
           var elem = $scope.url_list[$scope.target];
+          $scope.mv_target(-1);
           $scope.go(elem);
         }
       }
@@ -74,7 +76,13 @@
       $http.post('/turl/delete?id=' + id).success(function(data) {
         delete_id(id);
       });
-      window.open(url);
+      var userAgent = $window.navigator.userAgent;
+      if (userAgent.match(/chrome/i)) {
+        openNewBackgroundTab(url);
+      }
+      else {
+        window.open(url);
+      }
     }
     // simply delete entry
     $scope.pass = function(elem) {
@@ -156,6 +164,16 @@
       if(2 >= $scope.url_list.length) {
         $scope.load_url_list();
       }
+    }
+    // via http://stackoverflow.com/questions/10812628/open-a-new-tab-in-the-background
+    function openNewBackgroundTab(url){
+      var a = document.createElement("a");
+      a.href = url;
+      var evt = document.createEvent("MouseEvents");
+      // the tenth parameter of initMouseEvent sets ctrl key
+      evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0,
+                                  true, false, false, false, 0, null);
+      a.dispatchEvent(evt);
     }
 
     // set default value
