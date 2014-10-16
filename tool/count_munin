@@ -2,7 +2,6 @@
 
 use warnings;
 use strict;
-use lib qw(/home/haram/perl5/lib/perl5);
 use LWP::Simple;
 use JSON qw(from_json);
 
