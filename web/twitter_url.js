@@ -121,11 +121,11 @@
         var elem = $scope.url_list[idx];
         if ( idx == $scope.target ) {
           elem.target = true;
-          //console.log('idx ', idx, 'is true');
+          //console.log('hilight_target idx ', idx, 'is true');
         }
         else {
           elem.target = false;
-          //console.log('idx ', idx, 'is false');
+          //console.log('hilight_target idx ', idx, 'is false');
         }
       }
     }
@@ -139,9 +139,7 @@
       else if ( $scope.target > max ) {
         $scope.target = max;
       }
-      $scope.$apply(function() {
-        $scope.hilight_target();
-      });
+      $scope.$apply($scope.hilight_target());
     }
 
     function get_idx(id) {
