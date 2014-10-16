@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+
+use warnings;
+use strict;
+use lib qw(/home/haram/perl5/lib/perl5);
+use LWP::Simple;
+use JSON qw(from_json);
+
+if ( defined $ARGV[0] and $ARGV[0] eq "config" ) {
+    print "graph_title twitter_url count\n";
+    print "graph_info twitter_url count\n";
+    #print "graph_args --base 1000 -l 0\n";
+    print "graph_category processes\n";
+#   print "graph_scale no\n";
+    print "graph_vlabel count\n";
+    print "Count.label count\n";
+    print "Count.info count unread articles\n";
+    exit 0;
+}
+
+my $json = get('http://localhost/turl/count');
+my $ref  = from_json($json);
+
+#use Data::Dumper; warn Dumper $val;
+
+printf "Count.value %s\n", $ref->{count} || 0;
