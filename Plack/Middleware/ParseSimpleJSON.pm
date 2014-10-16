@@ -2,7 +2,7 @@ package Plack::Middleware::ParseSimpleJSON;
 # parse simple json data from content and set to QUERY_STRING
 use parent qw(Plack::Middleware);
 use Plack::Request;
-use JSON qw( from_json );
+use JSON qw(from_json);
 
 =pod
 
@@ -22,7 +22,8 @@ is also ok
 
 sub call {
     my( $self, $env ) = @_;
-    #use Data::Dumper; #die Dumper $env;
+    #use Data::Dumper;
+    #die Dumper $env;
     #warn "psgi.input = " . $env->{'psgi.input'};
     #use Data::Dumper; warn Dumper $env->{'psgi.input'};
     #die $env->{'mojo.c'}->tx->req->headers->content_type;
